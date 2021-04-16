@@ -3,9 +3,14 @@ TO DO
 
 COLOCAR A OARTIR DA LINHA 148 O MODELO DE FITTS
 
-MUDAR A FORMA DO CURSOR PARA APONTAR PARA O ALVO PARA IR 
+MUDAR A FORMA DO CURSOR PARA APONTAR PARA O ALVO PARA IR
 
 MUDAR A COR DO ALVO PARA IR E DO SEGUINTE
+
+Implementar música:
+        No dia de teste fazer 1. sem musica
+                              2. musica middle bpm (130-150)
+                              3. musica high bpm (180)
 
 */
 // Bakeoff #2 - Seleção de Alvos e Fatores Humanos
@@ -46,6 +51,13 @@ for (var i = 0; i < NUMBER_ATTEMPTS; i++) fitts_IDs[i] = 0;
 //Fitts id lists
 let rigthList, leftList;
 
+//Counter to blink the target
+let blink = 0, weight = 0;
+
+//create variables to host sounds
+
+let sound;
+
 // Target class (position and width)
 class Target {
   constructor(x, y, w) {
@@ -55,8 +67,18 @@ class Target {
   }
 }
 
+/*
+function preload() {
+  sound = loadSound('sound.mp3');
+  if(sound.isLoaded()){
+    console.log("Sound Loaded");
+  }
+}
+*/
+
 // Runs once at the start
 function setup() {
+
   createCanvas(700, 500);    // window size in px before we go into fullScreen()
   frameRate(60);             // frame rate (DO NOT CHANGE!)
 
@@ -64,6 +86,7 @@ function setup() {
 
   textFont("Ubuntu, sans-serif One", 18);     // font size for the majority of the text
   drawUserIDScreen();        // draws the user input screen (student number and display size)
+  //sound.play();
 }
 
 // Runs every frame and redraws the screen
@@ -78,6 +101,7 @@ function draw() {
     text("Trial " + (current_trial + 1) + " of " + trials.length, 50, 20);
 
     // Draw all 16 targets
+    blink += 1;
     for (var i = 0; i < NUMBER_TARGETS; i++) drawTarget(i);
   }
 }
@@ -201,24 +225,36 @@ function mousePressed() {
 // Draw target on-screen
 function drawTarget(i) {
   // Get the location and size for target (i)
-  let target = getTargetBounds(i);
+  let target = getTargetBounds(i), x, y, z;
+
+  if(blink % 30 >= 15)
+  {
+    x = 90, y = 183, z = 91;
+  } 
+  else  {
+    x = 68, y = 226, z = 10;
+  }
+
+  weigth = (blink % 30 >= 20) ? 10 : 5;
 
   // Check whether the target and the next one are the same
   if (trials[current_trial + 1] === i && trials[current_trial] === i) {
-    fill(color(204, 220, 0));
-    stroke(color(1, 61, 57));
+    fill(color(x, y, z));
+    stroke(color(197, 36, 36));
     strokeWeight(10);
   }
 
   // Draws the actual target
   else if (trials[current_trial] === i) {
-    noStroke();
-    fill(color(204, 220, 0));
+    fill(color(68, 226, 10));
+    stroke(color(60, 127, 51));
+    strokeWeight(weigth);
   }
 
   // Highlights the next target the user should be trying to select
   else if (trials[current_trial + 1] === i) {
-    fill(color(1, 61, 57));
+    //fill(color(68, 226, 10)); //green
+    fill(color(178, 50, 25)); //red
     noStroke();
   }
 
