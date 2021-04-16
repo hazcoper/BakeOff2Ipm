@@ -70,12 +70,13 @@ function validSize()
 // Starts the test (i.e., target selection task)
 function startTest()
 {
+  /*
   if (validID() && validSize())
   {
     // Saves student and display information
     student_ID = parseInt(student_ID_form.value());
     display_size = parseInt(display_size_form.value());
-
+*/
     // Deletes UI elements
     main_text.remove();
     info.remove();
@@ -88,7 +89,7 @@ function startTest()
     // Goes fullscreen and starts test
     fullscreen(!fullscreen());
     testStartTime = millis();
-  }
+  //}
 }
 
 // Randomize the order in the targets to be selected
