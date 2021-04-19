@@ -193,6 +193,7 @@ function printAndSavePerformance() {
 function mousePressed() {
   // Only look for mouse releases during the actual test
   // (i.e., during target selections)
+
   if (draw_targets) {
     // Get the location and size of the target the user should be trying to select
     let target = getTargetBounds(trials[current_trial]);
