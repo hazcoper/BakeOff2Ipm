@@ -9,7 +9,7 @@ function drawUserIDScreen()
   background(color(0,0,0));                                          // sets background to black
   
   // Text prompt
-  main_text = createDiv("Insert your student number and display size");
+  main_text = createDiv("Insert your student number and display size ");
   main_text.id('main_text');
   main_text.position(10, 10);
   
@@ -17,7 +17,7 @@ function drawUserIDScreen()
   // 1. Student ID
   let student_ID_pos_y_offset = main_text.size().height + 40;         // y offset from previous item
   
-  student_ID_form = createInput('');                                 // create input field
+  student_ID_form = createInput('96942');                                 // create input field
   student_ID_form.position(200, student_ID_pos_y_offset);
   
   student_ID_label = createDiv("Student number (int)");              // create label
@@ -27,7 +27,7 @@ function drawUserIDScreen()
   // 2. Display size
   let display_size_pos_y_offset = student_ID_pos_y_offset + student_ID_form.size().height + 20;
   
-  display_size_form = createInput('');                              // create input field
+  display_size_form = createInput('24');                              // create input field
   display_size_form.position(200, display_size_pos_y_offset);
   
   display_size_label = createDiv("Display size in inches");   // create label
@@ -59,6 +59,8 @@ function validID()
 // Verifies if the display size is a number, and within an acceptable range
 function validSize()
 {
+
+
   if (parseInt(display_size_form.value()) < 50 && parseInt(display_size_form.value()) > 10) return true
   else
   {
@@ -70,13 +72,13 @@ function validSize()
 // Starts the test (i.e., target selection task)
 function startTest()
 {
-  /*
+
   if (validID() && validSize())
   {
     // Saves student and display information
     student_ID = parseInt(student_ID_form.value());
     display_size = parseInt(display_size_form.value());
-*/
+
     // Deletes UI elements
     main_text.remove();
     info.remove();
@@ -89,7 +91,7 @@ function startTest()
     // Goes fullscreen and starts test
     fullscreen(!fullscreen());
     testStartTime = millis();
-  //}
+  }
 }
 
 // Randomize the order in the targets to be selected

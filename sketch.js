@@ -1,11 +1,7 @@
 /*
 TO DO
 
-COLOCAR A OARTIR DA LINHA 148 O MODELO DE FITTS
-
 MUDAR A FORMA DO CURSOR PARA APONTAR PARA O ALVO PARA IR
-
-MUDAR A COR DO ALVO PARA IR E DO SEGUINTE
 
 Implementar música:
         No dia de teste fazer 1. sem musica
@@ -22,7 +18,7 @@ Implementar música:
 
 // Database (CHANGE THESE!)
 const GROUP_NUMBER = 15;      // Add your group number here as an integer (e.g., 2, 3)
-const BAKE_OFF_DAY = false;  // Set to 'true' before sharing during the simulation and bake-off days
+const BAKE_OFF_DAY = true;  // Set to 'true' before sharing during the simulation and bake-off days
 const NUMBER_TARGETS = 16;
 const NUMBER_ATTEMPTS = 48;
 
@@ -56,7 +52,9 @@ let blink = 0, weight = 0;
 
 //create variables to host sounds
 
-let sound;
+var sound;
+var hit_sound;
+var miss_sound;
 
 // Target class (position and width)
 class Target {
@@ -67,39 +65,45 @@ class Target {
   }
 }
 
-/*
+
 function preload() {
-  sound = loadSound('sound.mp3');
-  if(sound.isLoaded()){
-    console.log("Sound Loaded");
-  }
+  sound = loadSound("sounds/background.mp3");
+  hit_sound = loadSound("sounds/hit2.wav");
+  miss_sound = loadSound("sounds/miss.wav");
+  sound.setVolume(0.03);
+  sound.loop();
+  hit_sound.setVolume(0.8);
+  miss_sound.setVolume(0.8);
 }
-*/
+
 
 // Runs once at the start
 function setup() {
 
   createCanvas(700, 500);    // window size in px before we go into fullScreen()
   frameRate(60);             // frame rate (DO NOT CHANGE!)
+  sound.play(); 
 
   randomizeTrials();         // randomize the trial order at the start of execution
 
   textFont("Ubuntu, sans-serif One", 18);     // font size for the majority of the text
   drawUserIDScreen();        // draws the user input screen (student number and display size)
-  //sound.play();
+  
 }
 
 // Runs every frame and redraws the screen
 function draw() {
+  
   if (draw_targets) {
     // The user is interacting with the 4x4 target grid
     background(color(0, 0, 0));        // sets background to black
 
     // Print trial count at the top left-corner of the canvas
+    push();
     fill(color(255, 255, 255));
     textAlign(LEFT);
     text("Trial " + (current_trial + 1) + " of " + trials.length, 50, 20);
-
+    pop();
     // Draw all 16 targets
     blink += 1;
     for (var i = 0; i < NUMBER_TARGETS; i++) drawTarget(i);
@@ -108,6 +112,8 @@ function draw() {
 
 // Print and save results at the end of 48 trials
 function printAndSavePerformance() {
+  sound.stop();
+  
   // DO NOT CHANGE THESE! 
   let accuracy = parseFloat(hits * 100) / parseFloat(hits + misses);
   let test_time = (testEndTime - testStartTime) / 1000;
@@ -150,6 +156,7 @@ function printAndSavePerformance() {
   }
 
   // Saves results (DO NOT CHANGE!)
+  fitts_IDs[0] = -2; 
   let attempt_data =
   {
     project_from: GROUP_NUMBER,
@@ -164,7 +171,7 @@ function printAndSavePerformance() {
     target_w_penalty: target_w_penalty,
     fitts_IDs: fitts_IDs
   }
-
+  
   // Send data to DB (DO NOT CHANGE!)
   if (BAKE_OFF_DAY) {
     // Access the Firebase DB
@@ -194,11 +201,14 @@ function mousePressed() {
     // Check to see if the mouse cursor is inside the target bounds,
     // increasing either the 'hits' or 'misses' counters
     if (dist(target.x, target.y, mouseX, mouseY) < target.w / 2) {
+      hit_sound.play();
       hits++;
       distance = dist(previousTarget.x, previousTarget.y, target.x, target.y);
+      
       fitts_IDs[current_trial] = Math.log2(distance / target.w + 1);
     }
     else {
+      miss_sound.play();
       misses++;
       fitts_IDs[current_trial] = -1;
     }
@@ -224,6 +234,11 @@ function mousePressed() {
 
 // Draw target on-screen
 function drawTarget(i) {
+  if(!sound.isPlaying()){
+    sound.play();
+  }else{
+    sound.setVolume(0.1);
+  }
   // Get the location and size for target (i)
   let target = getTargetBounds(i), x, y, z;
 
@@ -235,8 +250,8 @@ function drawTarget(i) {
     x = 68, y = 226, z = 10;
   }
 
-  weigth = (blink % 30 >= 20) ? 10 : 5;
-
+  weigth = (blink % 60 <= 20) ? 4 : (blink % 60 >= 40) ? 7 : 10;
+  push();
   // Check whether the target and the next one are the same
   if (trials[current_trial + 1] === i && trials[current_trial] === i) {
     fill(color(x, y, z));
@@ -263,10 +278,11 @@ function drawTarget(i) {
   // Draws all the fake targets 
   else {
     noStroke();
-    fill(color(155, 155, 155));
+    fill(color(120, 120, 120));
   }
 
   circle(target.x, target.y, target.w);
+  pop();
 }
 
 // Returns the location and size of a given target
