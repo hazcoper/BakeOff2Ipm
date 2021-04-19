@@ -82,7 +82,7 @@ function setup() {
 
   createCanvas(700, 500);    // window size in px before we go into fullScreen()
   frameRate(60);             // frame rate (DO NOT CHANGE!)
-  sound.play(); 
+  // sound.play(); 
 
   randomizeTrials();         // randomize the trial order at the start of execution
 
