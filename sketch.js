@@ -66,15 +66,15 @@ class Target {
 }
 
 
-function preload() {
-  sound = loadSound("sounds/background.mp3");
-  hit_sound = loadSound("sounds/hit2.wav");
-  miss_sound = loadSound("sounds/miss.wav");
-  sound.setVolume(0.03);
-  sound.loop();
-  hit_sound.setVolume(0.8);
-  miss_sound.setVolume(0.8);
-}
+ function preload() {
+   sound = loadSound("sounds/background.mp3");
+   hit_sound = loadSound("sounds/hit2.wav");
+   miss_sound = loadSound("sounds/miss.wav");
+   sound.setVolume(0.03);
+   sound.loop();
+   hit_sound.setVolume(0.8);
+   miss_sound.setVolume(0.8);
+ }
 
 
 // Runs once at the start
@@ -82,7 +82,7 @@ function setup() {
 
   createCanvas(700, 500);    // window size in px before we go into fullScreen()
   frameRate(60);             // frame rate (DO NOT CHANGE!)
-  // sound.play(); 
+  
 
   randomizeTrials();         // randomize the trial order at the start of execution
 
@@ -112,7 +112,7 @@ function draw() {
 
 // Print and save results at the end of 48 trials
 function printAndSavePerformance() {
-  sound.stop();
+   sound.stop();
   
   // DO NOT CHANGE THESE! 
   let accuracy = parseFloat(hits * 100) / parseFloat(hits + misses);
@@ -134,7 +134,7 @@ function printAndSavePerformance() {
   text("Total time taken: " + test_time + "s", width / 2, 160);
   text("Average time per target: " + time_per_target + "s", width / 2, 180);
   text("Average time for each target (+ penalty): " + target_w_penalty + "s", width / 2, 220);
-  text("Fitts Index of Preformance", width / 2, 280);
+  text("Fitts Index of Performance", width / 2, 280);
   
   // Print Fitts IDS (one per target, -1 if failed selection)
   rigthList = createElement('ul'), leftList = createElement('ul');
@@ -191,6 +191,9 @@ function printAndSavePerformance() {
 
 // Mouse button was pressed - lets test to see if hit was in the correct target
 function mousePressed() {
+   if(!sound.isPlaying()){
+     sound.play();
+   }
   // Only look for mouse releases during the actual test
   // (i.e., during target selections)
 
@@ -235,11 +238,11 @@ function mousePressed() {
 
 // Draw target on-screen
 function drawTarget(i) {
-  if(!sound.isPlaying()){
-    sound.play();
-  }else{
-    sound.setVolume(0.1);
-  }
+   if(!sound.isPlaying()){
+     sound.play();
+   }else{
+     sound.setVolume(0.1);
+   }
   // Get the location and size for target (i)
   let target = getTargetBounds(i), x, y, z;
 
@@ -304,7 +307,6 @@ function continueTest() {
   // Resets performance variables
   hits = 0;
   misses = 0;
-  //fitts_IDs = [];
 
   rigthList.remove();
   leftList.remove();
