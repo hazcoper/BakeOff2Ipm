@@ -7,7 +7,7 @@
 
 // Database (CHANGE THESE!)
 const GROUP_NUMBER   = 15;      // Add your group number here as an integer (e.g., 2, 3)
-const BAKE_OFF_DAY   = true;  // Set to 'true' before sharing during the simulation and bake-off days
+const BAKE_OFF_DAY   = false;  // Set to 'true' before sharing during the simulation and bake-off days
 const NUMBER_TARGETS = 16;
 const NUMBER_ATTEMPTS = 48;
 
