@@ -1,0 +1,6 @@
+comecar o som so quando tem user input
+
+salvar esta versao como sketchsom
+depois tirar tudo do som, salvar como sketch cor e piscar
+tirar o piscar e salvar como cor
+tirar a cor e salvar como skecth base
