@@ -254,7 +254,7 @@ function drawTarget(i) {
     x = 68, y = 226, z = 10;
   }
 
-  weigth = (blink % 60 <= 20) ? 4 : (blink % 60 >= 40) ? 7 : 10;
+  weight = (blink % 60 <= 20) ? 4 : (blink % 60 >= 40) ? 7 : 10;
   push();
   // Check whether the target and the next one are the same
   if (trials[current_trial + 1] === i && trials[current_trial] === i) {
@@ -267,7 +267,7 @@ function drawTarget(i) {
   else if (trials[current_trial] === i) {
     fill(color(68, 226, 10));
     stroke(color(60, 127, 51));
-    strokeWeight(weigth);
+    strokeWeight(weight);
   }
 
   // Highlights the next target the user should be trying to select

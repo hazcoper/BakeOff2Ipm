@@ -1,0 +1,5 @@
+esta e a versao com a primeira que nos fizemos
+a mudanca foi meter uma cor para o proximo e para o current
+
+
+testado -> esta tudo a funcionar e pronto para ser usado

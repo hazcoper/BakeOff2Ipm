@@ -239,17 +239,21 @@ function mousePressed() {
 
 // draw an arrow for a vector at a given base position
 // From p5.js
-function drawArrow(base, vec, red, green, blue) {
+function drawArrow(base, dest, myColor) {
   push();
-  stroke(color(red, green, blue));
+
+  //x1, y1, x2, y2
+  stroke(color(myColor));
   strokeWeight(3);
-  fill(color(red, green, blue));
-  translate(base.x, base.y);
-  line(0, 0, vec.x, vec.y);
-  rotate(vec.heading());
-  let arrowSize = 7;
-  translate(vec.mag() - arrowSize, 0);
-  triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
+  fill(color(myColor));
+  line(base.x, base.y, dest.x, dest.y);
+  // translate(base.x, base.y);
+  // line(0, 0, vec.x, vec.y);
+  // rotate(vec.heading());
+  // let arrowSize = 7;
+  // translate(vec.mag() - arrowSize, 0);
+  // triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
+  
   pop();
 }
 
@@ -261,27 +265,27 @@ function drawTarget(i) {
      sound.setVolume(0.1);
    }
   // Get the location and size for target (i)
-  let target = getTargetBounds(i), x, y, z, origin = createVector(mouseX, mouseY), dest = createVector(target.x, target.y);
+  let red, green, blue, target = getTargetBounds(i);
 
   if(blink % 30 >= 15)
   {
-    x = 90, y = 183, z = 91;
+    red = 90, green = 183, blue = 91;
   } 
   else  {
-    x = 68, y = 226, z = 10;
+    red = 68, green = 226, blue = 10;
   }
 
-  weigth = blink % 10 + 1;
+  weight = ((blink*3) % 100)/10 + 1;
 
   push();
   // Check whether the target and the next one are the same
   if (trials[current_trial + 1] === i && trials[current_trial] === i) {
     //Changes the target colour if the user is on top of the target
-    //if (dist(target.x, target.y, mouseX, mouseY) < target.w / 2)
-    //{
-      //x = 255, y = 255, z = 255
-    //}
-    fill(color(x, y, z));
+    if (dist(target.x, target.y, mouseX, mouseY) < target.w / 2)
+    {
+      red = 255, green = 255, blue = 255;
+    }
+    fill(color(red, green, blue));
     stroke(color(197, 36, 36));
     strokeWeight(10);
   }
@@ -290,16 +294,22 @@ function drawTarget(i) {
   else if (trials[current_trial] === i) {
     if (dist(target.x, target.y, mouseX, mouseY) < target.w / 2)
     {
-      x = 255, y = 255, z = 255
+      red = 255, green = 255, blue = 255
+    } 
+    else
+    {
+      let dest = createVector(mouseX, mouseY), origin = createVector(target.x, target.y);
+      drawArrow(origin, dest, (202, 44, 146));
     }
-    fill(color(x, y, z));
-    stroke(color(60, 127, 51));
-    strokeWeight(weigth);
+    fill(color(red, green, blue));
+    push();
+    fill(color(60, 127, 51));
+    circle(target.x, target.y, target.w + weight);
+    pop();
   }
 
   // Highlights the next target the user should be trying to select
   else if (trials[current_trial + 1] === i) {
-    //fill(color(68, 226, 10)); //green
     fill(color(178, 50, 25)); //red
     noStroke();
   }
@@ -313,7 +323,6 @@ function drawTarget(i) {
   }
 
   circle(target.x, target.y, target.w);
-  //drawArrow(origin, dest, 202, 44, 146);
   pop();
 }
 

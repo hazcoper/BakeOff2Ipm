@@ -212,14 +212,14 @@ function drawTarget(i) {
 
     x = 90, y = 183, z = 91;
      
-    weigth = (blink % 60 <= 20) ? 4 : (blink % 60 >= 40) ? 7 : 10;
+    weight = (blink % 60 <= 20) ? 4 : (blink % 60 >= 40) ? 7 : 10;
     push();
     
     // Draws the actual target
     if (trials[current_trial] === i) {
       fill(color(155,155,155));
       stroke(color(60, 127, 51));
-      strokeWeight(weigth);
+      strokeWeight(weight);
     }
   
     // Does not draw a border if this is not the target the user
