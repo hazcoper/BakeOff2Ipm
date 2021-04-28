@@ -40,7 +40,7 @@ function drawUserIDScreen()
   start_button.position(width/2 - start_button.size().width/2, height/2 - start_button.size().height/2);
 
   // 4. Information
-  info = createP("<b> Please Read Instructions </b><br>The circle that you need to press is presented in yellow and the next one in a tone of green <br> If they happen to be the same it will show one single yellow circle with a green stroke <br> The test starts when you press the start button <br> The correct target will change to ---- when the mouse is on top of it");
+  info = createP("The circle that you need to press is presented in yellow and the next one in a tone of green <br> If they happen to be the same it will show one single yellow circle with a green stroke <br> The test starts when you press the start button");
   info.id('info');
   info.position(10, 300);
 }

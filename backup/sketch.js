@@ -48,7 +48,7 @@ for (var i = 0; i < NUMBER_ATTEMPTS; i++) fitts_IDs[i] = 0;
 let rigthList, leftList;
 
 //Counter to blink the target
-let blink = 0, weight = 0, fase = false;
+let blink = 0, weight = 0;
 
 //create variables to host sounds
 
@@ -191,9 +191,9 @@ function printAndSavePerformance() {
 
 // Mouse button was pressed - lets test to see if hit was in the correct target
 function mousePressed() {
-  if(!sound.isPlaying()){
-    sound.play();
-  }
+   if(!sound.isPlaying()){
+     sound.play();
+   }
   // Only look for mouse releases during the actual test
   // (i.e., during target selections)
 
@@ -236,21 +236,6 @@ function mousePressed() {
   }
 }
 
-//From p5.js and modified for the project
-function drawArrow(origin, dest, red, green, blue, lineStroke) {
-  push();
-  stroke(color(red, green, blue));
-  strokeWeight(lineStroke);
-  fill(color(red, green, blue));
-  var angle = atan2(origin.y - dest.y, origin.x - dest.x); //returns the angle between the line and the x axis
-  line(origin.x, origin.y, dest.x+cos(angle)*dest.z, dest.y+sin(angle)*dest.z); //offsets the line by the width of the target
-  let offset = 10;
-  translate(dest.x+cos(angle)*dest.z, dest.y+sin(angle)*dest.z); //translates the center of the display to just offside of the target
-  rotate(angle-HALF_PI);
-  triangle(-offset*0.5, offset, offset*0.5, offset, 0, -offset/2);
-  pop();
-}
-
 // Draw target on-screen
 function drawTarget(i) {
    if(!sound.isPlaying()){
@@ -259,52 +244,35 @@ function drawTarget(i) {
      sound.setVolume(0.1);
    }
   // Get the location and size for target (i)
-  let red, green, blue, target = getTargetBounds(i);
+  let target = getTargetBounds(i), x, y, z;
 
   if(blink % 30 >= 15)
   {
-    red = 90, green = 183, blue = 91;
+    x = 90, y = 183, z = 91;
   } 
   else  {
-    red = 68, green = 226, blue = 10;
+    x = 68, y = 226, z = 10;
   }
-  
-  weight = ((blink*3) % 100)/10 + 1;
 
+  weight = (blink % 60 <= 20) ? 4 : (blink % 60 >= 40) ? 7 : 10;
   push();
   // Check whether the target and the next one are the same
-  let distance = dist(target.x, target.y, mouseX, mouseY);
   if (trials[current_trial + 1] === i && trials[current_trial] === i) {
-    //Changes the target colour if the user is on top of the target
-    if (distance < target.w / 2)
-    {
-      red = 255, green = 255, blue = 255;
-    }
-    fill(color(red, green, blue));
+    fill(color(x, y, z));
     stroke(color(197, 36, 36));
     strokeWeight(10);
   }
 
   // Draws the actual target
   else if (trials[current_trial] === i) {
-    if (distance < target.w / 2)
-    {
-      red = 255, green = 255, blue = 255
-    } 
-    else
-    {
-      let mouse = createVector(mouseX, mouseY), vTarget = createVector(target.x, target.y, target.w);
-      drawArrow(mouse, vTarget, 202, 44, 146, 10);
-    }
-    fill(color(red, green, blue));
-    push();
-    fill(color(60, 127, 51));
-    circle(target.x, target.y, target.w + weight);
-    pop();
+    fill(color(68, 226, 10));
+    stroke(color(60, 127, 51));
+    strokeWeight(weight);
   }
 
   // Highlights the next target the user should be trying to select
   else if (trials[current_trial + 1] === i) {
+    //fill(color(68, 226, 10)); //green
     fill(color(178, 50, 25)); //red
     noStroke();
   }
