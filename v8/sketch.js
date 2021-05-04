@@ -44,7 +44,10 @@ for (var i = 0; i < NUMBER_ATTEMPTS; i++) fitts_IDs[i] = 0;
 let rigthList, leftList;
 
 //Counter to blink the target
-let blink = 0, weight = 0, fase = false;
+let blink = 0, fase = false;
+let borderSize = 0;
+let isDecreasing = false;
+
 
 //create variables to host sounds
 
@@ -82,7 +85,9 @@ function setup() {
 
   randomizeTrials();         // randomize the trial order at the start of execution
 
-  textFont("Ubuntu, sans-serif One", 18);     // font size for the majority of the text
+  textFont("Ubuntu, sans-serif", 18);     // font size for the majority of the text
+  //textFont("Georgia", 18);     // font size for the majority of the text
+
   drawUserIDScreen();        // draws the user input screen (student number and display size)
   
 }
@@ -174,7 +179,8 @@ function printAndSavePerformance() {
     attempt_duration: test_time,
     time_per_target: time_per_target,
     target_w_penalty: target_w_penalty,
-    fitts_IDs: fitts_IDs
+    fitts_IDs: fitts_IDs,
+    version: "v8"
   }
   
   // Send data to DB (DO NOT CHANGE!)
@@ -269,6 +275,23 @@ function drawTarget(i) {
   // Get the location and size for target (i)
   let red, green, blue, target = getTargetBounds(i);
 
+  if (borderSize > 13 && isDecreasing === false){
+    //reach the upper limit, start decreasing
+    isDecreasing = true;
+  }
+  if(borderSize < 3 && isDecreasing === true){
+    //reached the lower limit, start increasing
+    isDecreasing = false;
+  }
+
+  // update the size of the border, change here to change the speed
+  if(isDecreasing === false){
+    borderSize += 0.04;
+  }
+  if(isDecreasing === true){
+    borderSize -= 0.04;
+  }
+
   if(blink % 30 >= 15)
   {
     red = 90, green = 183, blue = 91;
@@ -276,8 +299,7 @@ function drawTarget(i) {
   else  {
     red = 89, green = 255, blue = 160;
   }
-  
-  weight = ((blink*3) % 100)/10 + 1;
+
 
   push();
   // Check whether the target and the next one are the same
@@ -302,7 +324,7 @@ function drawTarget(i) {
     fill(color(red, green, blue));
     push();
     fill(color(60, 127, 51));
-    circle(target.x, target.y, target.w + weight);
+    circle(target.x, target.y, target.w + borderSize);
     pop();
   }
 
@@ -323,7 +345,16 @@ function drawTarget(i) {
   circle(target.x, target.y, target.w);
 
   if(trials[current_trial + 1] === i && trials[current_trial] === i){
-    text("2x",target.x,target.y);
+    push();
+    
+    translate(target.x, target.y);
+    stroke(50);
+    fill(0, 0, 0);
+    textAlign(CENTER, CENTER);
+    textSize(30);
+    text("2x",0,0);
+    
+    pop();
   }
 
   pop();

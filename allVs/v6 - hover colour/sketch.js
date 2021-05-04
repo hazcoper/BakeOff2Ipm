@@ -35,7 +35,7 @@ let misses = 0;      // number of missed selections (used to calculate accuracy)
 let database;                  // Firebase DB  
 
 // Study control parameters
-let draw_targets = true;  // used to control what to show in draw()
+let draw_targets = false;  // used to control what to show in draw()
 let trials = [];     // contains the order of targets that activate in the test
 let current_trial = 0;      // the current trial number (indexes into trials array above)
 let attempt = 0;      // users complete each test twice to account for practice (attemps 0 and 1)
@@ -48,16 +48,13 @@ for (var i = 0; i < NUMBER_ATTEMPTS; i++) fitts_IDs[i] = 0;
 let rigthList, leftList;
 
 //Counter to blink the target
-let blink = 0, weight = 0;
+let blink = 0, weight = 0, fase = false;
 
 //create variables to host sounds
 
 var sound;
 var hit_sound;
 var miss_sound;
-
-let borderDecrease = true;
-let borderSize = 11;
 
 // Target class (position and width)
 class Target {
@@ -172,8 +169,7 @@ function printAndSavePerformance() {
     attempt_duration: test_time,
     time_per_target: time_per_target,
     target_w_penalty: target_w_penalty,
-    fitts_IDs: fitts_IDs,
-    version:    "4"
+    fitts_IDs: fitts_IDs
   }
   
   // Send data to DB (DO NOT CHANGE!)
@@ -195,9 +191,9 @@ function printAndSavePerformance() {
 
 // Mouse button was pressed - lets test to see if hit was in the correct target
 function mousePressed() {
-   if(!sound.isPlaying()){
-     sound.play();
-   }
+  if(!sound.isPlaying()){
+    sound.play();
+  }
   // Only look for mouse releases during the actual test
   // (i.e., during target selections)
 
@@ -240,6 +236,7 @@ function mousePressed() {
   }
 }
 
+
 // Draw target on-screen
 function drawTarget(i) {
    if(!sound.isPlaying()){
@@ -248,53 +245,44 @@ function drawTarget(i) {
      sound.setVolume(0.1);
    }
   // Get the location and size for target (i)
-  let target = getTargetBounds(i), x, y, z, origin = createVector(mouseX, mouseY), dest = createVector(target.x, target.y); 
+  let red, green, blue, target = getTargetBounds(i);
 
-  if(borderSize > 12 && borderDecrease === false){
-    borderDecrease = true;
-  }
-  if(borderSize < 2 && borderDecrease === true){
-    borderDecrease = false;
+  if(blink % 30 >= 15)
+  {
+    red = 90, green = 183, blue = 91;
+  } 
+  else  {
+    red = 68, green = 226, blue = 10;
   }
 
-  if(borderDecrease === false){
-    borderSize += 0.03;
-  }
-  if(borderDecrease === true){
-    borderSize -= 0.03;
-  }
-  weight = borderSize;
-
-  // if(weight > 11){
-  //   borderDecrease = true;
-  // }
-  // if(weight < 2){
-  //   borderDecrease = false;
-  // }
-  // if(borderDecrease === true){
-  //   weight = -(blink/2);
-  // }else{
-  //   weight = blink/2;
-  // }
-
-  // weight = (blink/2) % 11; 
   
-  
+  weight = ((blink*3) % 100)/10 + 1;
+
   push();
   // Check whether the target and the next one are the same
+  let distance = dist(target.x, target.y, mouseX, mouseY);
   if (trials[current_trial + 1] === i && trials[current_trial] === i) {
-    //sets the colour of the target to white if you are on top of it
-
-    fill(color(x, y, z));
+    //Changes the target colour if the user is on top of the target
+    if (distance < target.w / 2)
+    {
+      red = 255, green = 255, blue = 255;
+    }
+    fill(color(red, green, blue));
     stroke(color(197, 36, 36));
     strokeWeight(10);
   }
 
   // Draws the actual target
   else if (trials[current_trial] === i) {
-    fill(color(68, 226, 10));
-    stroke(color(60, 127, 51));
-    strokeWeight(weight);
+    if (distance < target.w / 2)
+    {
+      red = 255, green = 255, blue = 255
+    } 
+    fill(color(red, green, blue));
+    push();
+    fill(color(60, 127, 51));
+    circle(target.x, target.y, target.w + weight);
+    pop();
   }
 
   // Highlights the next target the user should be trying to select
@@ -312,11 +300,8 @@ function drawTarget(i) {
   }
 
   circle(target.x, target.y, target.w);
-  
   pop();
 }
-
-
 
 // Returns the location and size of a given target
 function getTargetBounds(i) {

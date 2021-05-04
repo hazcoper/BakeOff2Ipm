@@ -35,7 +35,7 @@ let misses = 0;      // number of missed selections (used to calculate accuracy)
 let database;                  // Firebase DB  
 
 // Study control parameters
-let draw_targets = true;  // used to control what to show in draw()
+let draw_targets = false;  // used to control what to show in draw()
 let trials = [];     // contains the order of targets that activate in the test
 let current_trial = 0;      // the current trial number (indexes into trials array above)
 let attempt = 0;      // users complete each test twice to account for practice (attemps 0 and 1)
@@ -55,9 +55,6 @@ let blink = 0, weight = 0;
 var sound;
 var hit_sound;
 var miss_sound;
-
-let borderDecrease = true;
-let borderSize = 11;
 
 // Target class (position and width)
 class Target {
@@ -172,8 +169,7 @@ function printAndSavePerformance() {
     attempt_duration: test_time,
     time_per_target: time_per_target,
     target_w_penalty: target_w_penalty,
-    fitts_IDs: fitts_IDs,
-    version:    "4"
+    fitts_IDs: fitts_IDs
   }
   
   // Send data to DB (DO NOT CHANGE!)
@@ -248,43 +244,20 @@ function drawTarget(i) {
      sound.setVolume(0.1);
    }
   // Get the location and size for target (i)
-  let target = getTargetBounds(i), x, y, z, origin = createVector(mouseX, mouseY), dest = createVector(target.x, target.y); 
+  let target = getTargetBounds(i), x, y, z;
 
-  if(borderSize > 12 && borderDecrease === false){
-    borderDecrease = true;
-  }
-  if(borderSize < 2 && borderDecrease === true){
-    borderDecrease = false;
+  if(blink % 30 >= 15)
+  {
+    x = 90, y = 183, z = 91;
+  } 
+  else  {
+    x = 68, y = 226, z = 10;
   }
 
-  if(borderDecrease === false){
-    borderSize += 0.03;
-  }
-  if(borderDecrease === true){
-    borderSize -= 0.03;
-  }
-  weight = borderSize;
-
-  // if(weight > 11){
-  //   borderDecrease = true;
-  // }
-  // if(weight < 2){
-  //   borderDecrease = false;
-  // }
-  // if(borderDecrease === true){
-  //   weight = -(blink/2);
-  // }else{
-  //   weight = blink/2;
-  // }
-
-  // weight = (blink/2) % 11; 
-  
-  
+  weight = (blink % 60 <= 20) ? 4 : (blink % 60 >= 40) ? 7 : 10;
   push();
   // Check whether the target and the next one are the same
   if (trials[current_trial + 1] === i && trials[current_trial] === i) {
-    //sets the colour of the target to white if you are on top of it
-
     fill(color(x, y, z));
     stroke(color(197, 36, 36));
     strokeWeight(10);
@@ -299,6 +272,7 @@ function drawTarget(i) {
 
   // Highlights the next target the user should be trying to select
   else if (trials[current_trial + 1] === i) {
+    //fill(color(68, 226, 10)); //green
     fill(color(178, 50, 25)); //red
     noStroke();
   }
@@ -312,11 +286,8 @@ function drawTarget(i) {
   }
 
   circle(target.x, target.y, target.w);
-  
   pop();
 }
-
-
 
 // Returns the location and size of a given target
 function getTargetBounds(i) {
