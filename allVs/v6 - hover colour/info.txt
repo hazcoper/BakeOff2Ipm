@@ -1,3 +1,0 @@
-por testar
-Consiste na adição de um vetor da posição do rato para o alvo a ser pressionado, na tranformação da mudança da border do alvo atual para algo contínuo e na mudança da cor do alvo certo, quando o rato sobre ele pairar
-erros em correr, por exemplo, a seta 

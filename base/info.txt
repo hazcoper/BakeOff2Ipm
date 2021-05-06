@@ -1,7 +1,0 @@
-isto contem o codigo base sem nenhuma modificacao nossa
-
-contem tambem tudo o que e preciso para o correr
-tem a nossa base de dados posta, e manda o indentificador para a base de dados tambem
-
-ja foi testada e esta a funciona e mandar as coisas para o lugar certo
-

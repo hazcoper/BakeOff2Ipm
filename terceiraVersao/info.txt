@@ -1,5 +1,0 @@
-isto e a terceira versao que nos fizemos
-por cima de tudo adicionamos o som
-	uma musica de fundo e tambem um barulho quando se acerta e outro barulho quando se erra
-	
-isto esta testado e a funcionar pronto para ser usado

@@ -1,4 +1,0 @@
-isto e a segunda versao que nos fizemos
-adicionamos uma borda que pisca para ajudar a pessoa a localizar o target
-
-versao corrida e testada, tudo a funcionar pronto para usar
